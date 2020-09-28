@@ -119,7 +119,8 @@ module.exports = {
             const reject = `UPDATE transactions SET status_payment = 3 WHERE id = ${id}`
             const result = await asyncQuery(reject)
 
-
+            const rejectOrder = `UPDATE orders SET status = 5 WHERE id = ${id}`
+            const resultOrder = await asyncQuery(rejectOrder)
             res.status(200).send("Payment Rejected!")
         } catch(err) {
             console.log(err)
