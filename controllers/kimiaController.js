@@ -49,6 +49,7 @@ module.exports = {
     editProduct: async (req, res) => {
         const id = parseInt(req.params.id)
         const {stock} = req.body
+        console.log('body',req.body)
         try {
             // check apakah product ada didatabase
             const checkProduct = `SELECT * FROM obat_kimia WHERE id=${id}`
@@ -56,12 +57,12 @@ module.exports = {
             if (check.length === 0) return res.status(400).send('product doesn\'t exist.')
 
             let botolNow = check[0].stock
-            console.log('ini', botolNow)
-            let totalNew = (stock - botolNow)*check[0].netto_perbotol
+            let totalNew = stock*check[0].netto_perbotol
+            const newStock = parseInt(stock)
             console.log(totalNew)
 
             // edit product
-            const query = `UPDATE obat_kimia SET stock = '${stock}', total_ml = '${check[0].total_ml + totalNew}' WHERE id=${id}`
+            const query = `UPDATE obat_kimia SET stock = ${botolNow + newStock}, total_ml = '${check[0].total_ml + totalNew}' WHERE id=${id}`
             const result = await asyncQuery(query)
 
             // send response

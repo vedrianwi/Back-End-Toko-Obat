@@ -126,5 +126,21 @@ module.exports = {
             console.log(err)
             res.status(500).send(err)
         }
-    }
+    },
+    getUserHistory: async (req, res) => {
+        const id = parseInt(req.params.id)
+        try {
+            const query = `select t.id, t.order_number,pt.type_payment,  t.total, ps.status_payment,  od.qty, t.bukti_transfer, od.product_id, t.user_id
+            FROM transactions t 
+            JOIN payment_types pt ON t.payment_type = pt.id
+            JOIN payment_status ps ON t.status_payment = ps.id
+            JOIN order_details od ON t.order_number = od.order_number
+            WHERE t.user_id = '${id}'
+            GROUP BY order_number;`
+            const result = await asyncQuery(query)
+            res.status(200).send(result)
+        } catch (err) {
+            console.log(err)
+        }
+    },
 }

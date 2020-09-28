@@ -10,5 +10,5 @@ router.post('/login', userController.login)
 router.post('/register', validator, userController.register)
 router.post('/users/keeplogin', verify, userController.keeplogin)
 router.post('/users/verification', verify, userController.emailverification)
-
+router.get('/user/history/:id', userController.getUserHistory)
 module.exports = router

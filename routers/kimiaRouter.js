@@ -7,5 +7,5 @@ const { kimiaController } = require('../controllers')
 //route
 router.get('/kimia', kimiaController.getProductKimia)
 router.get('/kimia/:category', kimiaController.categoryKimia)
-router.patch('/editkimia/:id', kimiaController.editProduct)
+router.put('/editkimia/:id', kimiaController.editProduct)
 module.exports = router
