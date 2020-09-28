@@ -30,5 +30,35 @@ module.exports = {
             console.log(err)
             res.status(500).send(err)
         }
+    },
+    getHistoryRacik : async(req, res) => {
+        try {
+            const query = `select od.id, od.order_number, group_concat(od.qty) as qty, od.total, od.satuan, group_concat(s.satuan) as satuan, group_concat(p.nama_kimia) as nama_kimia, ts.status_order
+            from order_details od
+            JOIN table_status ts  ON od.order_number = ts.order_number
+            JOIN obat_kimia p ON od.product_id = p.id
+            JOIN satuan s ON od.satuan = s.id
+            GROUP BY od.order_number
+            HAVING od.satuan >= 1;`
+            const result = await asyncQuery(query)
+            res.status(200).send(result)
+        } catch(err) {
+            console.log(err)
+        }
+    },
+    getHistoryJadi : async(req, res) => {
+        try {
+            const query = `select od.id, od.order_number, group_concat(od.qty) as qty, od.total, od.satuan, group_concat(s.satuan) as satuan, group_concat(p.nama_kimia) as nama_kimia, ts.status_order
+            from order_details od
+            JOIN table_status ts  ON od.order_number = ts.order_number
+            JOIN obat_kimia p ON od.product_id = p.id
+            JOIN satuan s ON od.satuan = s.id
+            GROUP BY od.order_number
+            HAVING od.satuan >= 1;`
+            const result = await asyncQuery(query)
+            res.status(200).send(result)
+        } catch(err) {
+            console.log(err)
+        }
     }
 }

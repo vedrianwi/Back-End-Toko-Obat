@@ -11,4 +11,6 @@ router.post('/register', validator, userController.register)
 router.post('/users/keeplogin', verify, userController.keeplogin)
 router.post('/users/verification', verify, userController.emailverification)
 router.get('/user/history/:id', userController.getUserHistory)
+router.delete('/users/:id', userController.deleteUser)
+router.patch("/users/:id", userController.editUser)
 module.exports = router

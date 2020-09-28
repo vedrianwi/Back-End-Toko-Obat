@@ -19,6 +19,8 @@ module.exports = {
 
             const resultHistory = await asyncQuery(getHistory)
 
+            const update = `UPDATE orders SET status = 3 WHERE order_number = '${order_number}'`
+            const resultUpdate = await asyncQuery(update)
             res.status(200).send(resultHistory)
             
         } catch (err) {
@@ -48,12 +50,17 @@ module.exports = {
     approvePayment: async (req, res) => {
         const id = parseInt(req.params.id)
         console.log(req.body)
+        const {order_number} = req.body
         try {
             const approve = `UPDATE transactions SET status_payment = 2 WHERE id = ${id}`
             const result = await asyncQuery(approve)
+
+            const update = `UPDATE orders SET status = 4 WHERE order_number = ${req.body[0].order_number}`
+            const updateDone = await asyncQuery(update)
             
             const getData = `SELECT qty, product_id from order_details WHERE order_number = ${req.body[0].order_number}`
             const resultData = await asyncQuery(getData)
+
 
             resultData.forEach(async (item) => {
                 const checkUpdate = `select t.id, t.order_number,pt.type_payment,  t.total, ps.status_payment,  od.qty, t.bukti_transfer, od.order_racik_id, od.satuan
@@ -64,7 +71,7 @@ module.exports = {
                 WHERE od.order_racik_id is null and od.satuan = 2
                 group by t.order_number;`
                 const resultCheck = await asyncQuery(checkUpdate)
-
+            
                 console.log('check', resultCheck)
                 if (resultCheck.length >= 1) {
     
@@ -111,6 +118,7 @@ module.exports = {
         try {
             const reject = `UPDATE transactions SET status_payment = 3 WHERE id = ${id}`
             const result = await asyncQuery(reject)
+
 
             res.status(200).send("Payment Rejected!")
         } catch(err) {

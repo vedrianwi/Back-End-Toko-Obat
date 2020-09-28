@@ -142,5 +142,50 @@ module.exports = {
         } catch (err) {
             console.log(err)
         }
+    }, 
+    editUser : async(req, res) => {
+        const Id = parseInt(req.params.id)
+        try {
+            const checkId = `select * from users where id = ${Id}`
+            const resultId = await asyncQuery (checkId)
+
+            if(resultId.length === 0) {
+                return res.status(400).send(`Users with id : ${Id} doesn\'t exists`)
+            }
+
+            const edit = `update users set ${generateQuery(req.body)}
+                            where id = ${id}`
+            const result = await asyncQuery(edit)
+            res.status(200).send(result)
+        } catch (error) {
+            console.log(error)
+            res.status(500).send(error)
+        }
     },
+    deleteUser : (req, res) => {
+        console.log('params : ', req.params)
+        console.log('body : ', req.body)
+        const id = parseInt(req.params.id)
+    
+        const checkId = `select * from users where id=${id}`
+        database.query(checkId, (err, result) => {
+            if (err) {
+                return res.status(500).send(err)
+            }
+    
+            if (result.length === 0) {
+                return res.status(200).send(`user with id : ${id} doesn't exist.`)
+            }
+            
+            const deleteAccount = `delete from users where id=${id}`
+            database.query(deleteAccount, (err2, result2) => {
+                if (err2) {
+                    console.log(err2)
+                    return res.status(500).send(err2)
+                }
+    
+                res.status(200).send(result2)
+            })
+        })
+    }
 }
